@@ -1,76 +1,80 @@
+% Plant Disease Diagnosis Expert System
 
-% Smart Home Lighting Expert System
+:- dynamic symptom/2.
+:- dynamic diagnosis/2.
 
+% Plants
+plant(tomato).
+plant(potato).
+plant(rose).
 
-:- dynamic light_status/2.
-:- dynamic motion_detected/2.
+% Initial symptoms
+symptom(tomato, yellow_leaves).
+symptom(tomato, brown_spots).
+symptom(tomato, wilting).
 
+symptom(potato, dark_spots).
+symptom(potato, leaf_wilting).
 
+symptom(rose, white_patches).
+symptom(rose, leaf_curling).
 
-room(living_room).
-room(bedroom).
-room(kitchen).
+% Disease diagnosis rules
 
+diagnose(Plant, leaf_blight) :-
+    symptom(Plant, yellow_leaves),
+    symptom(Plant, brown_spots),
+    symptom(Plant, wilting).
 
+diagnose(Plant, early_blight) :-
+    symptom(Plant, dark_spots),
+    symptom(Plant, leaf_wilting).
 
-% Initially all lights are OFF.
-light_status(living_room, off).
-light_status(bedroom, off).
-light_status(kitchen, off).
+diagnose(Plant, powdery_mildew) :-
+    symptom(Plant, white_patches),
+    symptom(Plant, leaf_curling).
 
+% Treatment recommendations
 
+treatment(leaf_blight, 'Remove infected leaves and avoid excessive watering.').
 
-% Motion detected in living room and kitchen.
-motion_detected(living_room, yes).
-motion_detected(bedroom, no).
-motion_detected(kitchen, yes).
+treatment(early_blight, 'Remove affected leaves and improve air circulation.').
 
+treatment(powdery_mildew, 'Remove infected parts and apply a suitable fungicide.').
 
-action(turn_on(Room)) :-
-    room(Room),
-    motion_detected(Room, yes),
-    light_status(Room, off).
+% Perform diagnosis
 
+perform_diagnosis(Plant) :-
+    diagnose(Plant, Disease),
+    treatment(Disease, Treatment),
+    retractall(diagnosis(Plant, _)),
+    assertz(diagnosis(Plant, Disease)),
+    format('Plant: ~w~n', [Plant]),
+    format('Disease: ~w~n', [Disease]),
+    format('Recommendation: ~w~n~n', [Treatment]).
 
-action(turn_off(Room)) :-
-    room(Room),
-    motion_detected(Room, no),
-    light_status(Room, on).
+perform_diagnosis(Plant) :-
+    plant(Plant),
+    \+ diagnose(Plant, _),
+    format('Plant: ~w~n', [Plant]),
+    format('No matching disease found.~n~n', []).
 
+% Add a symptom
 
-action(stop) :-
-    \+ (
-        action(turn_on(_))
-    ),
-    \+ (
-        action(turn_off(_))
-    ).
+add_symptom(Plant, Symptom) :-
+    assertz(symptom(Plant, Symptom)),
+    format('Added ~w symptom to ~w.~n', [Symptom, Plant]).
 
+% Remove a symptom
 
+remove_symptom(Plant, Symptom) :-
+    retract(symptom(Plant, Symptom)),
+    format('Removed ~w symptom from ~w.~n', [Symptom, Plant]).
 
-% Turn ON the light.
-perform(turn_on(Room)) :-
-    retract(light_status(Room, off)),
-    assertz(light_status(Room, on)),
-    format("Turning ON light in ~w...~n", [Room]).
-
-% Turn OFF the light.
-perform(turn_off(Room)) :-
-    retract(light_status(Room, on)),
-    assertz(light_status(Room, off)),
-    format("Turning OFF light in ~w...~n", [Room]).
-
-% Stop the system.
-perform(stop) :-
-    format("All lights are in the required state. Stopping...~n", []).
-
+% Start system
 
 start :-
-    action(Action),
-    perform(Action),
-    Action \= stop,
-    start.
-
-start :-
-    action(stop),
-    perform(stop).
+    format('--- Plant Disease Diagnosis Expert System ---~n~n', []),
+    perform_diagnosis(tomato),
+    perform_diagnosis(potato),
+    perform_diagnosis(rose).

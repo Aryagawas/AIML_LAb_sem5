@@ -1,53 +1,49 @@
-# Smart Home Lighting System
+# Plant Disease Diagnosis Expert System
 
-This is a simple Prolog program for controlling lights in different rooms based on motion detection.
+This is a simple rule-based expert system made using **Prolog**. It checks the symptoms of a plant and identifies a possible disease based on predefined rules.
 
 ## Features
 
-* Turns the light ON when motion is detected.
-* Turns the light OFF when there is no motion.
-* Stores the current status of each light.
-* Stops when no further action is required.
+* Checks plant symptoms
+* Identifies possible diseases
+* Gives basic treatment recommendations
+* Uses Prolog facts and rules
+* Uses `assertz/1` and `retract/1` for updating symptoms
 
-## Rooms
+## Technologies Used
 
-* Living Room
-* Bedroom
-* Kitchen
+* Prolog
+* SWI-Prolog
+* No external libraries or datasets
+
+## Plants Covered
+
+* Tomato – Leaf Blight
+* Potato – Early Blight
+* Rose – Powdery Mildew
 
 ## How to Run
 
-Save the program as:
-
-```text
-smart_home.pl
-```
-
-Open SWI-Prolog and load the file:
+Open `expert.pl` in SWI-Prolog and load the file:
 
 ```prolog
-[smart_home].
+?- ["D:/prolog/expert.pl"].
 ```
 
 Then run:
 
 ```prolog
-start.
+?- start.
 ```
 
-## Sample Output
+## Project Files
 
 ```text
-Turning ON light in living_room...
-Turning ON light in kitchen...
-All lights are in the required state. Stopping...
+Plant-Disease-Expert-System/
+├── expert.pl
+└── README.md
 ```
 
-## Concepts Used
+## Note
 
-* Facts and rules
-* Dynamic predicates
-* `assertz/1`
-* `retract/1`
-* Recursion
-* Negation
+The system is made for educational purposes and uses a small predefined set of symptoms and diseases.
